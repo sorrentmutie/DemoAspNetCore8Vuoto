@@ -3,17 +3,20 @@
 public class SalutoFisso : ISaluto
 {
     private readonly IClock clock;
+    private readonly IConfiguration configuration;
 
-    public SalutoFisso(IClock clock)
+    public SalutoFisso(IClock clock, IConfiguration configuration)
     {
         this.clock = clock;
+        this.configuration = configuration;
+        //this.logger = logger;
     }
 
     public string Saluta(string nome)
     {
         if(clock.OraCorrente().Hour <= 12)
         {
-            return $"Buongiorno, {nome} {clock.OraCorrente().ToString()}";
+            return $"{configuration["Saluto"]}, {nome} {clock.OraCorrente().ToString()}";
         }
         return $"Buonasera, {nome}";
     }
