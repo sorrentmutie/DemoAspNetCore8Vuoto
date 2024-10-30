@@ -15,6 +15,34 @@ var app = builder.Build();
 //        return sal;
 //    });
 
+app.UseStaticFiles();
+
+app.Use( async (context, next) =>
+{
+    var logger = context.RequestServices.GetRequiredService<ILogger<Program>>();
+    logger.LogInformation("Primo Middleware");
+
+    if (context.Request.Path == "/pippo")
+    {
+
+
+        await context.Response.WriteAsync("Esci fuori!");
+        return;
+    } else
+    {
+        await next.Invoke();
+    }
+});
+
+app.Use(async (context, next) => {
+    var logger = context.RequestServices.GetRequiredService<ILogger<Program>>();
+    logger.LogInformation("Secondo Middleware");
+
+    await next.Invoke(); 
+});
+
+
+
 app.MapGet("/", (ISaluto saluto, ILogger<Program> logger) => {
     var sal = saluto.Saluta("Salvatore");
     logger.LogInformation("Esempio di log");
